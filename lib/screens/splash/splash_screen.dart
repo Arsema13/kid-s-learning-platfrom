@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
                   "DreamSpark Learn",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                     shadows: [
