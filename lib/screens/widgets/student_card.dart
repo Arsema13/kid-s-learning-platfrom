@@ -3,54 +3,46 @@ import '../models/student_model.dart';
 
 class StudentCard extends StatelessWidget {
   final StudentModel student;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const StudentCard({super.key, required this.student, required this.onTap});
+  const StudentCard({super.key, required this.student, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: Colors.orangeAccent,
-                child: Text(
-                  student.name.substring(0, 1).toUpperCase(),
-                  style: const TextStyle(fontSize: 24, color: Colors.white),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      student.name,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      "Level: ${student.level}",
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    Text(
-                      "Email: ${student.email}",
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
-            ],
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      elevation: 4,
+      child: ListTile(
+        onTap: onTap,
+        leading: CircleAvatar(
+          backgroundColor: Colors.orangeAccent,
+          child: Text(
+            student.kidName.isNotEmpty ? student.kidName[0].toUpperCase() : '?',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+        ),
+        title: Text(
+          student.kidName,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          'Email: ${student.email}\nLevel: ${student.level}',
+          style: const TextStyle(fontSize: 14, color: Colors.black54),
+        ),
+        isThreeLine: true,
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          size: 18,
+          color: Colors.black45,
         ),
       ),
     );
