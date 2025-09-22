@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'lesson_content_screen.dart';
 import 'awards_screen.dart';
 import 'progress_screen.dart';
@@ -47,6 +49,24 @@ class _HomePageState extends State<HomePage>
       duration: const Duration(milliseconds: 800),
     );
     _animationController.forward();
+
+    fetchUserName(); // fetch kidName from Firestore
+  }
+
+  Future<void> fetchUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (doc.exists && doc.data()!.containsKey('kidName')) {
+      setState(() {
+        _userName = doc['kidName'];
+      });
+    }
   }
 
   void _onItemTapped(int index) {
@@ -150,12 +170,10 @@ class _HomePageState extends State<HomePage>
           ),
         ),
       ),
-      // Learn screen (can be a separate LearnScreen or same as Home)
-      
       // Awards screen
       const AwardsScreen(),
       // Progress screen
-            ProgressContent(),
+      const ProgressContent(),
       // Profile screen
        ProfileScreen(),
     ];
@@ -166,7 +184,6 @@ class _HomePageState extends State<HomePage>
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          
           BottomNavigationBarItem(
               icon: Icon(Icons.emoji_events_outlined), label: 'Awards'),
           BottomNavigationBarItem(
