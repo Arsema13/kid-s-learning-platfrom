@@ -15,11 +15,10 @@ class _ProfileScreenState extends State<ProfileScreen>
   String _kidName = "User";
   String _avatarEmoji = "👧";
 
-  // Stats
   int _lessonsCompleted = 0;
-  int _totalLessons = 20; // example total
+  int _totalLessons = 20; // example
   int _badgesEarned = 0;
-  int _totalBadges = 5; // example total
+  int _totalBadges = 5; // example
   int _points = 0;
 
   List<Map<String, dynamic>> _achievements = [];
@@ -52,20 +51,19 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
         setState(() {
-          _kidName = data['kidname'] ?? "User"; // make sure matches Firestore
+          _kidName = data['kidName'] ?? "User";
           _avatarEmoji = data['avatarEmoji'] ?? "👧";
 
           _lessonsCompleted = data['progress']?['lessonsCompleted'] ?? 0;
           _points = data['progress']?['points'] ?? 0;
           _badgesEarned = data['progress']?['badgesEarned'] ?? 0;
 
-          _achievements = List<Map<String, dynamic>>.from(
-              data['achievements'] ?? []);
+          _achievements =
+              List<Map<String, dynamic>>.from(data['achievements'] ?? []);
 
           _isLoading = false;
         });
       } else {
-        // No user data found
         setState(() {
           _isLoading = false;
         });
@@ -98,42 +96,39 @@ class _ProfileScreenState extends State<ProfileScreen>
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  // Avatar and name
+                  // Avatar and Name
                   ScaleTransition(
                     scale: CurvedAnimation(
                         parent: _animationController, curve: Curves.elasticOut),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 24),
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundColor: Colors.orange[200],
-                            child: Text(
-                              _avatarEmoji,
-                              style: const TextStyle(fontSize: 50),
-                            ),
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.orange[200],
+                          child: Text(
+                            _avatarEmoji,
+                            style: const TextStyle(fontSize: 50),
                           ),
-                          const SizedBox(height: 12),
-                          Text(
-                            _kidName,
-                            style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          _kidName,
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
                           ),
-                          const SizedBox(height: 6),
-                          const Text(
-                            'Keep learning and have fun! 🎉',
-                            style: TextStyle(fontSize: 16, color: Colors.black54),
-                          ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Keep learning and have fun!',
+                          style: TextStyle(fontSize: 16, color: Colors.black54),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Stats Cards
+                  // Stats
                   GridView.count(
                     crossAxisCount: 2,
                     shrinkWrap: true,
@@ -152,12 +147,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                     ],
                   ),
                   const SizedBox(height: 24),
-                  // Achievements / Badges
+                  // Achievements
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "Achievements 🎖️",
+                        "Achievements",
                         style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -169,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: _achievements.isEmpty
                             ? Center(
                                 child: Text(
-                                  "No achievements yet! 🏆",
+                                  "No achievements yet!",
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.grey[600],
@@ -181,10 +176,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 itemBuilder: (context, index) {
                                   final badge = _achievements[index];
                                   final colors = [
-                                    Colors.primaries[Random().nextInt(
-                                        Colors.primaries.length)].shade200,
-                                    Colors.primaries[Random().nextInt(
-                                        Colors.primaries.length)].shade400,
+                                    Colors.primaries[Random()
+                                        .nextInt(Colors.primaries.length)]
+                                        .shade200,
+                                    Colors.primaries[Random()
+                                        .nextInt(Colors.primaries.length)]
+                                        .shade400,
                                   ];
                                   return Container(
                                     width: 100,
@@ -236,7 +233,6 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  // Helper to build stat cards
   Widget _buildStatCard(String title, String value, Color color) {
     return Container(
       decoration: BoxDecoration(
