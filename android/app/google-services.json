@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "945358288281",
+    "project_id": "kids-learning-platform-6266f",
+    "storage_bucket": "kids-learning-platform-6266f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945358288281:android:fa9d4c53caddccfeb34f08",
+        "android_client_info": {
+          "package_name": "com.example.flutter_learning_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE929pMaWiHL3CRVTcdwkAsaBAzjqMygk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

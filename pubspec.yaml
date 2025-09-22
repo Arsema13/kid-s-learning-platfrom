@@ -1,0 +1,49 @@
+name: flutter_learning_app
+description: A learning app for Ethiopian students (Amharic, Math, Science, History)
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.7.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  confetti: ^0.7.0   # 🎉 For confetti animations
+  # UI & Animations
+  cupertino_icons: ^1.0.8
+  lottie: ^3.1.2
+  google_fonts: ^6.0.0
+
+  # Firebase
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
+
+  # HTTP requests
+  http: ^1.2.2
+
+  # YouTube videos
+  youtube_player_flutter: ^8.1.1
+
+  # State management
+  provider: ^6.1.2
+
+  # Toasts & helpers
+  fluttertoast: ^8.2.8
+
+  # Shared Preferences for storing local settings
+  shared_preferences: ^2.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/lottie/
+    - assets/images/
