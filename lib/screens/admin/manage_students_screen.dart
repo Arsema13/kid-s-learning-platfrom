@@ -6,29 +6,30 @@ import '../widgets/student_card.dart';
 class ManageStudentsScreen extends StatelessWidget {
   const ManageStudentsScreen({super.key});
 
-  Future<List<StudentModel>> fetchStudents() async {
-    final snapshot = await FirebaseFirestore.instance.collection('students').get();
-    return snapshot.docs
-        .map((doc) => StudentModel.fromMap(doc.data(), doc.id))
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Manage Students")),
-      body: FutureBuilder<List<StudentModel>>(
-        future: fetchStudents(),
+      appBar: AppBar(
+        title: const Text("Manage Students"),
+        backgroundColor: Colors.orangeAccent,
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .orderBy('kidName')
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(child: Text('No students found.'));
           }
 
-          final students = snapshot.data!;
+          final students = snapshot.data!.docs
+              .map((doc) => StudentModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+              .toList();
 
           return ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -38,9 +39,9 @@ class ManageStudentsScreen extends StatelessWidget {
               return StudentCard(
                 student: student,
                 onTap: () {
-                  // TODO: Navigate to student detail or edit
+                  // TODO: Navigate to student detail/edit screen
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Tapped on ${student.name}")),
+                    SnackBar(content: Text("Tapped on ${student.kidName}")),
                   );
                 },
               );
