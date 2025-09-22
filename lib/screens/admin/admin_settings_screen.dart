@@ -1,66 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class AdminSettingsScreen extends StatefulWidget {
-  final Function(bool)? onThemeChanged;
-  const AdminSettingsScreen({super.key, this.onThemeChanged});
+class AdminSettingsScreen extends StatelessWidget {
+  const AdminSettingsScreen({super.key});
 
-  @override
-  State<AdminSettingsScreen> createState() => _AdminSettingsScreenState();
-}
-
-class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
-  bool _darkMode = false;
-  bool _notificationsEnabled = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSettings();
-  }
-
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _darkMode = prefs.getBool('darkMode') ?? false;
-      _notificationsEnabled = prefs.getBool('notifications') ?? true;
-    });
-  }
-
-  void _toggleDarkMode(bool value) {
-    setState(() => _darkMode = value);
-    widget.onThemeChanged?.call(value);
-  }
-
-  Future<void> _toggleNotifications(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() => _notificationsEnabled = value);
-    await prefs.setBool('notifications', value);
-  }
-
-  void _logout() {
-    showDialog(
+  Future<void> _logout(BuildContext context) async {
+    final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text("Logout"),
         content: const Text("Are you sure you want to logout?"),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(context, false),
             child: const Text("Cancel"),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Logged out successfully!")),
-              );
-            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () => Navigator.pop(context, true),
             child: const Text("Logout"),
           ),
         ],
       ),
     );
+
+    if (confirm == true) {
+      await FirebaseAuth.instance.signOut();
+      if (context.mounted) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
+      }
+    }
   }
 
   @override
@@ -69,55 +45,45 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
       appBar: AppBar(
         title: const Text("Settings"),
         backgroundColor: Colors.orangeAccent,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Logout Button
             Card(
-              elevation: 4,
-              shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              child: SwitchListTile(
-                title: const Text(
-                  "Dark Mode 🌙",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: const Text("Toggle between light and dark theme"),
-                value: _darkMode,
-                onChanged: _toggleDarkMode,
-                secondary: const Icon(Icons.dark_mode),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
-            ),
-            const SizedBox(height: 16),
-            Card(
               elevation: 4,
-              shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              child: SwitchListTile(
-                title: const Text(
-                  "Notifications 🔔",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: const Text("Enable or disable notifications"),
-                value: _notificationsEnabled,
-                onChanged: _toggleNotifications,
-                secondary: const Icon(Icons.notifications),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Card(
-              elevation: 4,
-              shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shadowColor: Colors.grey.withOpacity(0.3),
               child: ListTile(
                 leading: const Icon(Icons.logout, color: Colors.redAccent),
                 title: const Text(
-                  "Logout 🚪",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "Logout",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                onTap: _logout,
+                onTap: () => _logout(context),
               ),
+            ),
+            const Spacer(),
+
+            // App Info
+            Column(
+              children: const [
+                Divider(),
+                SizedBox(height: 8),
+                Text(
+                  "App Version 1.0.0",
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  "© 2025 Your Company",
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
             ),
           ],
         ),
